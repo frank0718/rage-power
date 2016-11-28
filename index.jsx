@@ -77,12 +77,16 @@ class RagePower extends React.Component {
 // https://developer.mozilla.org/zh-CN/docs/Web/API/Node/removeChild
 
 // this.props.children 属性。它表示组件的所有子节点
+// others style 在哪里定义的？
   render() {
     const { children, style, colors: _, ...others } = this.props;
     const newChildren = React.cloneElement(children, {
       onInput: this._onInput
     });
-
+//     克隆并返回一个新的 ReactElement （内部子元素也会跟着克隆）
+//     ，新返回的元素会保留有旧元素的 props、ref、key，也会集成新的 props（只要在第二个参数中有定义）。
+//     而在 cloneElement 里第一个参数应该是 ReactElement：
+// this.node ?
     return (
       <div
         {...others}
@@ -94,6 +98,7 @@ class RagePower extends React.Component {
     );
   }
 
+// 下面代码是摘抄的
   /**
    * Following code is ported from: https://atom.io/packages/power-mode
    */
