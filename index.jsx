@@ -7,10 +7,12 @@ const MAX_PARTICLES = 500;
 const PARTICLE_NUM_RANGE = () => 5 + Math.round(Math.random() * 5);
 const PARTICLE_GRAVITY = 0.075;
 const PARTICLE_ALPHA_FADEOUT = 0.96;
+//小点点的坐标
 const PARTICLE_VELOCITY_RANGE = {
   x: [-1, 1],
   y: [-3.5, -1.5]
 };
+//小点点的颜色
 const COLORS = [
   '#1f77b4',
   '#ff7f0e',
@@ -24,16 +26,21 @@ const COLORS = [
 ];
 
 class RagePower extends React.Component {
+  //一种机制，验证别人使用组件时，提供的参数是否符合要求。
   static propTypes = {
-    children: PropTypes.node,
+    children: PropTypes.node,// children 必须是node类型
     onInput: PropTypes.func,
     colors: PropTypes.array
   }
-
+//设置默认的props；https://github.com/facebook/react/issues/3725
   static defaultProps = {
     colors: COLORS
-  }
-
+//   }
+// 子类必须在constructor方法中调用super方法，否则新建实例时会报错。这是因为子类没有自己的this对象，
+// 而是继承父类的this对象，然后对其进行加工。如果不调用super方法，子类就得不到this对象。
+    
+//     关于bind http://wwsun.github.io/posts/react-with-es6-part-3.html
+//  关于throttle  创建一个节流函数，在 wait 秒内最多执行 func 一次的函数。  https://www.kancloud.cn/wizardforcel/lodash-doc-45/144227
   constructor(props, context) {
     super(props, context);
     this._drawFrame = this._drawFrame.bind(this);
@@ -43,6 +50,12 @@ class RagePower extends React.Component {
     this._particles = [];
   }
 
+//   HTML5 <canvas> 标签用于绘制图像（通过脚本，通常是 JavaScript）。
+//   http://www.runoob.com/jsref/dom-obj-canvas.html
+  //   当前唯一的合法值是 "2d"，它指定了二维绘图，并且导致这个方法返回一个环境对象，该对象导出一个二维绘图 API。
+
+//   Window 对象属性
+//   http://www.runoob.com/jsref/obj-window.html
   componentDidMount() {
     this.canvas = document.createElement('canvas');
     this.canvas.width = window.innerWidth;
@@ -54,11 +67,16 @@ class RagePower extends React.Component {
     document.body.appendChild(this.canvas);
     window.requestAnimationFrame(this._drawFrame);
   }
+// node insert 
+// https://developer.mozilla.org/zh-CN/docs/Web/API/Node/appendChild
 
   componentWillUnmount() {
     document.body.removeChild(this.canvas);
   }
+// node remove
+// https://developer.mozilla.org/zh-CN/docs/Web/API/Node/removeChild
 
+// this.props.children 属性。它表示组件的所有子节点
   render() {
     const { children, style, colors: _, ...others } = this.props;
     const newChildren = React.cloneElement(children, {
